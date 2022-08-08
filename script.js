@@ -6,7 +6,7 @@ const appData = {
     screenPrice: 0,
     rollback: 10,
     adaptive: true,
-    services: {},
+    services: [],
     servicePercentPrice: 0,
     fullPrice: 0,
     allServicePrices: 0,
@@ -34,6 +34,7 @@ const appData = {
 
             }
 
+
             for (let i = 0; i < 2; i++) {
                 let name;
                 let price = 0;
@@ -42,27 +43,33 @@ const appData = {
                     name = prompt('Какой дополнительный тип услуги нужен?', 'service1');
                 } while (isNumber(name));
 
-
                 do {
-                    price = prompt('Сколько это будет стоить?', 8000);
-                }
-                while (!isNumber(price));
+                    price = +prompt('Сколько это будет стоить?', 8000);
+                } while (!isNumber(price));
 
-                appData.services[name] = +price;
-            };
+                appData.services.push({ id: i, name: name, price: price });
+                // appData.services[name] = +price;
+
+
+            }
 
             appData.adaptive = confirm('Нужен ли адаптив на сайте?');
         };
 
         const addPrices = function () {
 
-            for (let screen of appData.screens) {
-                appData.screenPrice += + screen.price;
-            };
+            // for (let screen of appData.screens) {
+            //     appData.screenPrice += + screen.price;
+            // }
 
-            for (let screen of appData.screens) {
-                appData.screenPrice += + screen.price;
-            };
+            appData.screenPrice = appData.screens.reduce(function (sum, item) {
+                return sum + item.price;
+            }, 0);
+
+            for (let service of appData.services) {
+                appData.allServicePrices += + service.price;
+            }
+
         };
 
         const isNumber = function (num) {
@@ -107,29 +114,14 @@ const appData = {
 
     },
 
-
-
     logger: function () {
         console.log(appData.fullPrice);
         console.log(appData.servicePercentPrice);
         console.log(appData.screens);
+        console.log(appData.services);
 
     },
 
 };
 
 appData.start();
-
-
-
-
-
-// console.log('Общая стоимость за доп. услуги: ' + allServicePrices);
-// console.log('Стоимость верстки и доп. услуг: ' + fullPrice);
-// console.log('Размер скидки: ' + getRollbackMessage(fullPrice));
-// console.log('Проект:' + title);
-// console.log('Тип экрана: ' + screens);
-// console.log('Цена: ' + screenPrice);
-// console.log('Нужен адаптив?: ' + adaptive);
-// console.log('Полная цена: ' + fullPrice);
-// console.log('Цена с откатом: ' + Math.ceil(servicePercentPrice));
